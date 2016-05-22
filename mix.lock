@@ -1,0 +1,2 @@
+%{"gproc": {:hex, :gproc, "0.5.0", "2df2d886f8f8a7b81a4b04aa17972b5965bbc5bf0100ea6d8e8ac6a0e7389afe", [:rebar], []},
+  "hedwig": {:hex, :hedwig, "1.0.0-rc.4", "7c134a19bec8508f8dfd308c69d37426e7bcb48f41cc0cb9366ad7514bb7fd40", [:mix], [{:gproc, "~> 0.5", [hex: :gproc, optional: false]}]}}
