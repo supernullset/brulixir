@@ -14,7 +14,7 @@ defmodule BruceHedwig.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :hedwig],
+    [applications: [:logger, :hedwig, :hedwig_flowdock],
      mod: {BruceHedwig, []}]
   end
 
@@ -28,6 +28,9 @@ defmodule BruceHedwig.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:hedwig, "~> 1.0.0-rc.4"}]
+    [
+      {:hedwig, github: "hedwig-im/hedwig"},
+      {:hedwig_flowdock, "~> 0.1.0"}
+    ]
   end
 end

@@ -3,9 +3,10 @@
 use Mix.Config
 
 config :bruce_hedwig, BruceHedwig.Robot,
-  adapter: Hedwig.Adapters.Console,
+  adapter: Hedwig.Adapters.Flowdock,
   name: "Bruce",
   aka: "/",
+  token: System.get_env("FLOWDOCK_API_TOKEN"),
   responders: [
     {Hedwig.Responders.Help, []},
     {Hedwig.Responders.GreatSuccess, []},
