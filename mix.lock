@@ -5,7 +5,7 @@
   "gun": {:hex, :gun, "1.0.0-pre.1", "28514327a7572234633e127c1c14c5d91991bc26ec16d3707f05962a31f0c1b5", [:rebar, :make], [{:ranch, "1.1.0", [hex: :ranch, optional: false]}, {:cowlib, "1.3.0", [hex: :cowlib, optional: false]}]},
   "hackney": {:hex, :hackney, "1.6.0", "8d1e9440c9edf23bf5e5e2fe0c71de03eb265103b72901337394c840eec679ac", [:rebar3], [{:ssl_verify_fun, "1.1.0", [hex: :ssl_verify_fun, optional: false]}, {:mimerl, "1.0.2", [hex: :mimerl, optional: false]}, {:metrics, "1.0.1", [hex: :metrics, optional: false]}, {:idna, "1.2.0", [hex: :idna, optional: false]}, {:certifi, "0.4.0", [hex: :certifi, optional: false]}]},
   "hedwig": {:git, "https://github.com/hedwig-im/hedwig.git", "2cf3ad2b881bdb81e7b2754d70ba1904e5c7a83e", []},
-  "hedwig_flowdock": {:hex, :hedwig_flowdock, "0.1.0", "bdcc5b451798fe7778ea5fca7c214be132226ce9f60c9ef39de6553cbeb9bcc5", [:mix], [{:poison, "~> 2.0", [hex: :poison, optional: false]}, {:gun, "1.0.0-pre.1", [hex: :gun, optional: false]}, {:connection, "~> 1.0", [hex: :connection, optional: false]}]},
+  "hedwig_flowdock": {:hex, :hedwig_flowdock, "0.1.1", "f5b4cfca92e9502da5027b0f1cbbe2087b54290ad1f61ba5e7a669b8cb8fe728", [:mix], [{:poison, "~> 2.0", [hex: :poison, optional: false]}, {:gun, "1.0.0-pre.1", [hex: :gun, optional: false]}, {:connection, "~> 1.0", [hex: :connection, optional: false]}]},
   "httpoison": {:hex, :httpoison, "0.8.3", "b675a3fdc839a0b8d7a285c6b3747d6d596ae70b6ccb762233a990d7289ccae4", [:mix], [{:hackney, "~> 1.6.0", [hex: :hackney, optional: false]}]},
   "idna": {:hex, :idna, "1.2.0", "ac62ee99da068f43c50dc69acf700e03a62a348360126260e87f2b54eced86b2", [:rebar3], []},
   "metrics": {:hex, :metrics, "1.0.1", "25f094dea2cda98213cecc3aeff09e940299d950904393b2a29d191c346a8486", [:rebar3], []},

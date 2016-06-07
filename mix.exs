@@ -30,7 +30,7 @@ defmodule BruceHedwig.Mixfile do
   defp deps do
     [
       {:hedwig, github: "hedwig-im/hedwig"},
-      {:hedwig_flowdock, "~> 0.1.0"}
+      {:hedwig_flowdock, "~> 0.1.1"}
     ]
   end
 end
