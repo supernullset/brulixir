@@ -7,6 +7,8 @@ config :bruce_hedwig, BruceHedwig.Robot,
   name: "Bruce",
   aka: "/",
   token: System.get_env("FLOWDOCK_API_TOKEN"),
+  user: System.get_env("FLOWDOCK_USERNAME"),
+  password: System.get_env("FLOWDOCK_PASSWORD"),
   responders: [
     {Hedwig.Responders.Help, []},
     {Hedwig.Responders.GreatSuccess, []},
