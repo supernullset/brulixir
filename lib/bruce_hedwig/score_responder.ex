@@ -10,7 +10,7 @@ defmodule BruceHedwig.ScoreResponder do
   end
 
   hear ~r/(?<subject>\A.+)\s*\-\-\s*for\s+(?<reason>.+\Z)/i, msg do
-    ScoreServer.inc(msg.matches["subject"], msg.matches["reason"])
+    ScoreServer.dec(msg.matches["subject"], msg.matches["reason"])
     reply msg, "Noted!"
   end
 
