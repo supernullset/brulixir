@@ -14,6 +14,7 @@ config :bruce_hedwig, BruceHedwig.Robot,
     {Hedwig.Responders.GreatSuccess, []},
     {Hedwig.Responders.ShipIt, []},
     {BruceHedwig.EchoResponder, []},
+    {BruceHedwig.ScoreResponder, []},
   ]
 
 

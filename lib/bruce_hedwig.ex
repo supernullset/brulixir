@@ -7,8 +7,7 @@ defmodule BruceHedwig do
     import Supervisor.Spec, warn: false
 
     children = [
-      # Define workers and child supervisors to be supervised
-      # worker(BruceHedwig.Worker, [arg1, arg2, arg3]),
+      worker(BruceHedwig.ScoreServer, []),
       worker(BruceHedwig.Robot, [])
     ]
 

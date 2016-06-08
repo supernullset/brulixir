@@ -27,14 +27,14 @@ defmodule BruceHedwig.ScoreServer do
 
   def scores do
     scores = GenServer.call(__MODULE__, {:scores})
-    "* " <> Enum.join(Enum.map(Map.keys(scores), fn k ->
+    "\n* " <> Enum.join(Enum.map(Map.keys(scores), fn k ->
       format_score(k, scores[k])
-    end), "* ")
+    end), "\n* ")
   end
 
   defp format_score(name, scores) do
     total = total_score(scores)
-    score_by_reason = Enum.group_by(scores, fn {s,r} -> r end)
+    score_by_reason = Enum.group_by(scores, fn {_s,r} -> r end)
     sub_scores = Enum.map(Map.keys(score_by_reason), fn reason ->
       if reason != "" do
         scores = score_by_reason[reason]
