@@ -10,7 +10,6 @@ config :bruce_hedwig, BruceHedwig.Robot,
   user: System.get_env("FLOWDOCK_USERNAME"),
   password: System.get_env("FLOWDOCK_PASSWORD"),
   responders: [
-    {Hedwig.Responders.Help, []},
     {Hedwig.Responders.GreatSuccess, []},
     {Hedwig.Responders.ShipIt, []},
     {BruceHedwig.EchoResponder, []},

@@ -1,8 +1,10 @@
 defmodule BruceHedwig.EchoResponder do
   use Hedwig.Responder
 
-
-  hear ~r/ping/i, msg do
+  @usage """
+  ping - Responds to a user who says ping with a pong
+  """
+  respond ~r/ping/i, msg do
     reply msg, "pong"
   end
 end
