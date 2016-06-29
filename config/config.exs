@@ -14,9 +14,12 @@ config :bruce_hedwig, BruceHedwig.Robot,
     {Hedwig.Responders.ShipIt, []},
     {BruceHedwig.EchoResponder, []},
     {BruceHedwig.ScoreResponder, []},
+    {BruceHedwig.ImageResponder, []},
   ]
 
-
+config :bruce_hedwig,
+  cse_id: System.get_env("CSE_ID"),
+  google_api_key: System.get_env("GOOGLE_API_KEY")
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
