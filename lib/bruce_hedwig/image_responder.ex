@@ -3,15 +3,24 @@ defmodule BruceHedwig.ImageResponder do
   require Logger
 
   @usage """
-  Image me - Returns a image from a custom google search
+  Image me - Returns an image from a custom google search
   """
-  hear ~r/image me (?<query>.+)/i, msg do
+  respond ~r/image (me )?(?<query>.+)/i, msg do
     query = msg.matches["query"]
-    response = execute_query(query)
+    response = execute_query(query, "")
     reply msg, response
   end
 
-  def execute_query(query) do
+  @usage """
+  Animate me - Returns a gif from a custom google search
+  """
+  respond ~r/animate (me )?(?<query>.+)/i, msg do
+    query = msg.matches["query"]
+    response = execute_query(query, "gif")
+    reply msg, response
+  end
+
+  def execute_query(query, fileType) do
     cse_id = Application.get_env(:bruce_hedwig, :cse_id)
     google_api_key = Application.get_env(:bruce_hedwig, :google_api_key)
     base_url = "https://www.googleapis.com/customsearch/v1"
@@ -22,7 +31,9 @@ defmodule BruceHedwig.ImageResponder do
       safe: "high",
       cx: cse_id,
       key: google_api_key,
+      fileType: fileType,
     }
+
     case HTTPoison.get(base_url, [], params: query_payload) do
       {:ok, %HTTPoison.Response{status_code: 403, body: body}} ->
         "Image quota exceeded :("
