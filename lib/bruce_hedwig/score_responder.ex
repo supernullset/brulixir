@@ -25,6 +25,6 @@ defmodule BruceHedwig.ScoreResponder do
   hedwig help - Lists the current scores in a semi formatted way
   """
   hear ~r/(what is the score?|tell me the score|list scores)/i, msg do
-    reply msg, ScoreServer.scores
+    reply msg, ScoreServer.html_scores
   end
 end
