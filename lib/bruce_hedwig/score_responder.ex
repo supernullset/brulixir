@@ -9,32 +9,16 @@ defmodule BruceHedwig.ScoreResponder do
   subject++ <reason> - Gives a thing a positive point
   """
   hear ~r/(?<subject>\A.+)\s*\+\+\s*for\s+(?<reason>.+\Z)/i, msg do
-    ScoreServer.inc(msg.matches["subject"], msg.matches["reason"])
-    reply msg, "Noted!"
-  end
-
-  @usage """
-  subject++ - Gives a thing a positive point
-  """
-  hear ~r/(?<subject>\A.+)\s*\+\+/i, msg do
-    ScoreServer.inc(msg.matches["subject"], "Just Because")
-    reply msg, "Noted!"
+    current = ScoreServer.inc(msg.matches["subject"], msg.matches["reason"])
+    reply msg, "Noted! #{msg.matches["subject"]} has #{current} points"
   end
 
   @usage """
   subject-- <reason> - Gives a thing a negative point
   """
   hear ~r/(?<subject>\A.+)\s*\-\-\s*for\s+(?<reason>.+\Z)/i, msg do
-    ScoreServer.dec(msg.matches["subject"], msg.matches["reason"])
-    reply msg, "Noted!"
-  end
-
-  @usage """
-  subject-- - Gives a thing a positive point
-  """
-  hear ~r/(?<subject>\A.+)\s*\-\-/i, msg do
-    ScoreServer.dec(msg.matches["subject"], "Just Because")
-    reply msg, "Noted!"
+    current = ScoreServer.dec(msg.matches["subject"], msg.matches["reason"])
+    reply msg, "Noted! #{msg.matches["subject"]} has #{current} points"
   end
 
   @usage """
