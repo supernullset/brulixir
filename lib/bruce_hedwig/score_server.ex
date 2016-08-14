@@ -2,6 +2,62 @@ defmodule BruceHedwig.ScoreServer do
   require Logger
 
   use GenServer
+
+
+  def lookup(name) do
+    GenServer.call(:score_server, {:lookup, String.capitalize(name)})
+  end
+
+  def inc(name, reason \\ "") do
+    GenServer.call(:score_server, {:inc, String.capitalize(name), reason})
+  end
+
+  def dec(name, reason \\ "") do
+    GenServer.call(:score_server, {:inc, String.capitalize(name), reason})
+  end
+
+  def scores do
+    GenServer.call(:score_server, {:scores})
+  end
+
+  def html_scores do
+    GenServer.call(:score_server, {:html_scores})
+  end
+
+  def total_score(scores) do
+    Enum.reduce(scores, 0, fn ({s, _r}, acc) -> s + acc end)
+  end
+
+  def keys(score_table) do
+    Enum.map(get_ets_keys_lazy(score_table), &(&1))
+  end
+
+  def get_ets_keys_lazy(table_name) when is_atom(table_name) do
+    eot = :"$end_of_table"
+
+    Stream.resource(
+      fn -> [] end,
+
+      fn acc ->
+        case acc do
+          [] ->
+            case :dets.first(table_name) do
+              ^eot -> {:halt, acc}
+              first_key -> {[first_key], first_key}
+            end
+
+          acc ->
+            case :dets.next(table_name, acc) do
+              ^eot -> {:halt, acc}
+              next_key -> {[next_key], next_key}
+            end
+        end
+      end,
+
+      fn _acc -> :ok end
+    )
+  end
+
   # TODO: This registration will fail *in test* when this application is
   # added to the supervisor tree. Look into OTP testing strategies
   def start_link do
@@ -72,57 +128,12 @@ defmodule BruceHedwig.ScoreServer do
     {:reply, formatted, score_table}
   end
 
-  def lookup(name) do
-    GenServer.call(:score_server, {:lookup, String.capitalize(name)})
+  def handle_info({:DOWN, _, _, _, _}, score_table) do
+    :dets.close(score_table)
+    {:noreply, score_table}
   end
 
-  def inc(name, reason \\ "") do
-    GenServer.call(:score_server, {:inc, String.capitalize(name), reason})
-  end
-
-  def dec(name, reason \\ "") do
-    GenServer.call(:score_server, {:inc, String.capitalize(name), reason})
-  end
-
-  def scores do
-    GenServer.call(:score_server, {:scores})
-  end
-
-  def html_scores do
-    GenServer.call(:score_server, {:html_scores})
-  end
-
-  def total_score(scores) do
-    Enum.reduce(scores, 0, fn ({s, _r}, acc) -> s + acc end)
-  end
-
-  def keys(score_table) do
-    Enum.map(get_ets_keys_lazy(score_table), &(&1))
-  end
-
-  def get_ets_keys_lazy(table_name) when is_atom(table_name) do
-    eot = :"$end_of_table"
-
-    Stream.resource(
-      fn -> [] end,
-
-      fn acc ->
-        case acc do
-          [] ->
-            case :dets.first(table_name) do
-              ^eot -> {:halt, acc}
-              first_key -> {[first_key], first_key}
-            end
-
-          acc ->
-            case :dets.next(table_name, acc) do
-              ^eot -> {:halt, acc}
-              next_key -> {[next_key], next_key}
-            end
-        end
-      end,
-
-      fn _acc -> :ok end
-    )
+  def handle_info(_msg, score_table) do
+    {:noreply, score_table}
   end
 end
