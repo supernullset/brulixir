@@ -9,21 +9,22 @@ defmodule BruceHedwig.ScoreServer do
   end
 
   def init(_) do
-    :ets.new(:score_table, [:set, :protected, :named_table])
-    {:ok, nil}
+    {:ok, score_table} = :dets.open_file(:score_table, [type: :set])
+
+    {:ok, score_table}
   end
 
-  def handle_call({:lookup, name}, _from, _) do
-    value = case :ets.lookup(:score_table, name) do
+  def handle_call({:lookup, name}, _from, score_table) do
+    value = case :dets.lookup(score_table, name) do
       [{^name, score_list}] -> score_list
       _ -> [{0, "existing"}]
     end
 
-    {:reply, value, nil}
+    {:reply, value, score_table}
   end
 
-  def handle_call({:inc, name, reason}, _from, _) do
-    scores = case :ets.lookup(:score_table, name) do
+  def handle_call({:inc, name, reason}, _from, score_table) do
+    scores = case :dets.lookup(score_table, name) do
       [{^name, score_list}] -> score_list
       _ -> [{0, "existing"}]
     end
@@ -31,13 +32,13 @@ defmodule BruceHedwig.ScoreServer do
     new_score = elem(Enum.at(scores, -1), 0) + 1
     new_scores = [ {new_score, reason} | scores ]
 
-    :ets.insert(:score_table, {name, new_scores})
+    :dets.insert(score_table, {name, new_scores})
 
-    {:reply, total_score(new_scores), nil}
+    {:reply, total_score(new_scores), score_table}
   end
 
-  def handle_call({:dec, name, reason}, _from, _) do
-    scores = case :ets.lookup(:score_table, name) do
+  def handle_call({:dec, name, reason}, _from, score_table) do
+    scores = case :dets.lookup(score_table, name) do
       [{^name, score_list}] -> score_list
       _ -> [{0, "existing"}]
     end
@@ -45,9 +46,30 @@ defmodule BruceHedwig.ScoreServer do
     new_score = elem(Enum.at(scores, -1), 0) - 1
     new_scores = [ {new_score, reason} | scores ]
 
-    :ets.insert(:score_table, {name, new_scores})
+    :dets.insert(score_table, {name, new_scores})
 
-    {:reply, total_score(new_scores), nil}
+    {:reply, total_score(new_scores), score_table}
+  end
+
+  def handle_call({:scores}, _from, score_table) do
+    s = for key <- keys(score_table), into: %{}, do: {key, lookup(key)}
+    {:reply, s, score_table}
+  end
+
+  def handle_call({:html_scores}, _from, score_table) do
+    formatted = for key <- keys(score_table), into: "" do
+      scores = case :dets.lookup(score_table, key) do
+                 [{^key, score_list}] -> score_list
+                 _ -> [{0, "existing"}]
+               end
+
+      output = "\n #{key} has #{total_score(scores)} points for the following reasons:\n"
+      Enum.reduce(scores, output, fn {v, reason}, acc ->
+        acc <> "\t * #{v} for #{reason} \n"
+      end)
+    end
+
+    {:reply, formatted, score_table}
   end
 
   def lookup(name) do
@@ -63,25 +85,19 @@ defmodule BruceHedwig.ScoreServer do
   end
 
   def scores do
-    for key <- keys, into: %{}, do: {key, lookup(key)}
+    GenServer.call(:score_server, {:scores})
   end
 
   def html_scores do
-    for key <- keys, into: "" do
-      scores = lookup(key)
-      output = "\n #{key} has #{total_score(scores)} points for the following reasons:\n"
-      Enum.reduce(scores, output, fn {v, reason}, acc ->
-        acc <> "\t * #{v} for #{reason} \n"
-      end)
-    end
+    GenServer.call(:score_server, {:html_scores})
   end
 
   def total_score(scores) do
     Enum.reduce(scores, 0, fn ({s, _r}, acc) -> s + acc end)
   end
 
-  def keys do
-    Enum.map(get_ets_keys_lazy(:score_table), &(&1))
+  def keys(score_table) do
+    Enum.map(get_ets_keys_lazy(score_table), &(&1))
   end
 
   def get_ets_keys_lazy(table_name) when is_atom(table_name) do
@@ -93,13 +109,13 @@ defmodule BruceHedwig.ScoreServer do
       fn acc ->
         case acc do
           [] ->
-            case :ets.first(table_name) do
+            case :dets.first(table_name) do
               ^eot -> {:halt, acc}
               first_key -> {[first_key], first_key}
             end
 
           acc ->
-            case :ets.next(table_name, acc) do
+            case :dets.next(table_name, acc) do
               ^eot -> {:halt, acc}
               next_key -> {[next_key], next_key}
             end
