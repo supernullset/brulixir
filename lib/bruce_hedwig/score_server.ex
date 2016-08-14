@@ -128,7 +128,7 @@ defmodule BruceHedwig.ScoreServer do
     {:reply, formatted, score_table}
   end
 
-  def handle_info({:DOWN, _, _, _, _}, score_table) do
+  def terminate(:shutdown, score_table) do
     :dets.close(score_table)
     {:noreply, score_table}
   end

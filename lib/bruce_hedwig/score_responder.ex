@@ -14,10 +14,26 @@ defmodule BruceHedwig.ScoreResponder do
   end
 
   @usage """
+  hedwig help - Gives a thing a positive point
+  """
+  hear ~r/(?<subject>\A.+)\s*\+\+/i, msg do
+    ScoreServer.inc(msg.matches["subject"], "Just Because")
+    reply msg, "Noted!"
+  end
+
+  @usage """
   hedwig help - Gives a thing a negative point
   """
-  hear ~r/(?<subject>\A.+)\s*\-\-\s*for\s+(?<reason>.+\Z)/i, msg do
-    ScoreServer.dec(msg.matches["subject"], msg.matches["reason"])
+  hear ~r/(?<subject>\A.+)\s*\-\-/i, msg do
+    ScoreServer.dec(msg.matches["subject"], "Just Because")
+    reply msg, "Noted!"
+  end
+
+  @usage """
+  hedwig help - Gives a thing a positive point
+  """
+  hear ~r/(?<subject>\A.+)\s*\+\+/i, msg do
+    ScoreServer.inc(msg.matches["subject"], "Just Because")
     reply msg, "Noted!"
   end
 
