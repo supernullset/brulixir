@@ -6,25 +6,25 @@ defmodule BruceHedwig.ScoreResponder do
 
 
   @usage """
-  hedwig help - Gives a thing a positive point
+  subject++ <reason> - Gives a thing a positive point
   """
   hear ~r/(?<subject>\A.+)\s*\+\+\s*for\s+(?<reason>.+\Z)/i, msg do
-    ScoreServer.inc(msg.matches["subject"], msg.matches["reason"])
-    reply msg, "Noted!"
+    current = ScoreServer.inc(msg.matches["subject"], msg.matches["reason"])
+    reply msg, "Noted! #{msg.matches["subject"]} has #{current} points"
   end
 
   @usage """
-  hedwig help - Gives a thing a negative point
+  subject-- <reason> - Gives a thing a negative point
   """
   hear ~r/(?<subject>\A.+)\s*\-\-\s*for\s+(?<reason>.+\Z)/i, msg do
-    ScoreServer.dec(msg.matches["subject"], msg.matches["reason"])
-    reply msg, "Noted!"
+    current = ScoreServer.dec(msg.matches["subject"], msg.matches["reason"])
+    reply msg, "Noted! #{msg.matches["subject"]} has #{current} points"
   end
 
   @usage """
-  hedwig help - Lists the current scores in a semi formatted way
+  list scores - Lists the current scores in a semi formatted way
   """
-  hear ~r/(what is the score?|tell me the score|list scores)/i, msg do
-    reply msg, ScoreServer.scores
+  respond ~r/(list scores)/i, msg do
+    reply msg, ScoreServer.html_scores
   end
 end

@@ -3,7 +3,7 @@ defmodule BruceHedwig.Mixfile do
 
   def project do
     [app: :bruce_hedwig,
-     version: "0.0.1",
+     version: "0.0.3",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -30,7 +30,7 @@ defmodule BruceHedwig.Mixfile do
   defp deps do
     [
       {:hedwig, github: "hedwig-im/hedwig"},
-      {:hedwig_flowdock, "~> 0.1.1"},
+      {:hedwig_flowdock, "~> 0.1.2"},
       {:httpoison, "~> 0.9.0"},
       {:exrm, "~> 1.0"},
     ]
